@@ -5,7 +5,9 @@ This README file contains the answers and explanations for the assigned homework
 ## Task 1: Manual Testing cases
 
 - **Test Case 1: Successfully Add a Product to Shopping List (positive)**
+
   **Title:** Add a product to the shopping list successfully
+  
   **Preconditions:** 
     - User is on the homepage of ALDI.US
     - User has an empty shopping list
@@ -80,9 +82,15 @@ This README file contains the answers and explanations for the assigned homework
 ## Task 2: Frontend Testing
 
   **Introduction**
+
   **Testing Framework:** I chose Cypress for this homework because it's an easy-to-use testing tool that runs directly in the browser. It’s great for checking user actions like logging in, catching bugs, and making sure everything runs smoothly.
 
   **Setup steps for the testing framework:**
-
-
+  - Install Nodejs from https://nodejs.org/
+  - Run the following commands in the commandline:
+  ```
+  npm init -y
+  npm install cypress --save-dev
+  npx cypress open
+  ```
 
