@@ -1,0 +1,19 @@
+# Node.js dependencies
+node_modules/
+package-lock.json
+
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+
+cypress.env.json
+cypress.config.local.js
+
+# Editor & OS files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.log
+*.bak
+*.swp

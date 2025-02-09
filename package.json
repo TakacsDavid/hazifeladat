@@ -1,0 +1,23 @@
+{
+  "name": "hazifeladat",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TakacsDavid/hazifeladat.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TakacsDavid/hazifeladat/issues"
+  },
+  "homepage": "https://github.com/TakacsDavid/hazifeladat#readme",
+  "devDependencies": {
+    "cypress": "^14.0.2"
+  }
+}

@@ -83,7 +83,7 @@ This README file contains the answers and explanations for the assigned homework
   - The shopping list resets, and all items added while logged out are lost.
 
   I usually attach screenshots, or screen record evidence of the issue, where the issue is present. Also mentioning the screenshot's link in the description e.g:
-  
+
   **Attached screenshots:** img2025-02-06-19-20.png, img2025-02-06-19-21.png
 
 ## Task 2: Frontend Testing
@@ -100,4 +100,55 @@ This README file contains the answers and explanations for the assigned homework
   npm install cypress --save-dev
   npx cypress open
   ```
+  **Testing an Angular app, there's a way to provide base url for the tests, therefore in tests we can just simply refer to it and add e.g /login**
+
+  ```
+  const { defineConfig } = require("cypress");
+
+  module.exports = defineConfig({
+  e2e: {
+    setupNodeEvents(on, config) {
+      // implement node event listeners here
+    },
+    baseUrl: 'http://localhost:4200', // Angular app route
+    supportFile: false
+  },
+});
+
+  ```
+
+  **Login Sample - can be found at /cypress/e2e/login.cy.js**
+
+  ```
+  describe('Login Feature', () => {
+  beforeEach(() => {
+    cy.visit('/login');
+  });
+
+  it('should login successfully with valid credentials', () => {
+    cy.get('input[name="email"]').type('testuser@example.com');
+    cy.get('input[name="password"]').type('Password123!');
+    cy.get('button[type="submit"]').click();
+
+    // Verify successful login
+    cy.url().should('include', '/dashboard'); 
+    cy.contains('Welcome, Test User').should('be.visible');
+  });
+
+  it('should show an error message for an invalid password', () => {
+    cy.get('input[name="email"]').type('testuser@example.com');
+    cy.get('input[name="password"]').type('wrongpassword');
+    cy.get('button[type="submit"]').click();
+    cy.contains('Invalid email or password').should('be.visible');
+    });
+  });
+  ```
+
+  **Disclaimer for using selectors:**
+
+  Prioritize to use css selectors, such as IDs, Classes and other css elements e.g:
+
+  **ID:** #email, #password, #submit-btn
+
+  **Class:** .email, .password, .submit-btn
 
