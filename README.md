@@ -7,7 +7,7 @@ This README file contains the answers and explanations for the assigned homework
 - **Test Case 1: Successfully Add a Product to Shopping List (positive)**
 
   **Title:** Add a product to the shopping list successfully
-  
+
   **Preconditions:** 
     - User is on the homepage of ALDI.US
     - User has an empty shopping list
@@ -25,6 +25,7 @@ This README file contains the answers and explanations for the assigned homework
 - **Test Case 2: Verify That Duplicate Items Cannot Be Added to the Shopping List (negative)**
 
   **Title:** Verify adding duplicate products is not possible to the shopping list
+
   **Preconditions:**
     - User is on the homepage of ALDI.US
     - User has already added a product (e.g., /products/dairy-eggs/milk-milk-substitutes/ "Milk") to the shopping list.
@@ -38,7 +39,9 @@ This README file contains the answers and explanations for the assigned homework
     - A checkmark should appear on the "Add to Shopping List" button, indicating the item is already added and preventing further clicks.
 
 - **Test Case 3: Verify Shopping List Persistence After Page Refresh (positive)**
+
   **Title:** Ensure the shopping list is retained after refreshing the page
+
   **Preconditions:**
     - User is on the homepage of ALDI.US
     - User has added at least one item to the shopping list.
@@ -52,8 +55,11 @@ This README file contains the answers and explanations for the assigned homework
 
 ## Bug Reporting 
   **Title:** Shopping list does not merge after login and items are lost
+
   **Environment: PROD**
+
   **Browser: Chrome 121.0**
+
   **Version: 2.0** (indicates the Shopping List microservice version)
 
   **Description:**
@@ -77,6 +83,7 @@ This README file contains the answers and explanations for the assigned homework
   - The shopping list resets, and all items added while logged out are lost.
 
   I usually attach screenshots, or screen record evidence of the issue, where the issue is present. Also mentioning the screenshot's link in the description e.g:
+  
   **Attached screenshots:** img2025-02-06-19-20.png, img2025-02-06-19-21.png
 
 ## Task 2: Frontend Testing
