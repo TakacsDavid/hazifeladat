@@ -152,3 +152,252 @@ This README file contains the answers and explanations for the assigned homework
 
   **Class:** .email, .password, .submit-btn
 
+## Task 3: API Testing
+
+  **Introduction**
+
+  **Testing Framework:** Even though REST-assured is a Java-specific library, it just felt more straightforward to use Cypress for this homework since I already started with it. After implementing the Cypress requests, I'll add a few notes about the Java REST-assured library.
+  Just a quick note - no matter what language you use, it really depends on what the task needs to achieve. That’s what makes it logical to choose the right framework and language for the job.
+
+  **API test sample: /cypress/e2e/api_tests.cy.js**
+
+  ```
+  describe('Task Management API Tests', () => {
+  const apiUrl = 'https://automationexercise.com/api_list';
+  let taskId; // Store task ID for later tests
+
+  // Create a new task
+  it('should create a new task', () => {
+      cy.request({
+          method: 'POST',
+          url: apiUrl,
+          body: {
+              title: 'New Task',
+              description: 'Task description',
+              completed: false
+          }
+      }).then(response => {
+          expect(response.status).to.eq(201);
+          expect(response.body).to.have.property('id');
+          taskId = response.body.id; // Save task ID
+      });
+  });
+
+  // Retrieve a task by ID
+  it('should retrieve a task by ID', () => {
+      cy.request({
+          method: 'GET',
+          url: `${apiUrl}/${taskId}`
+      }).then(response => {
+          expect(response.status).to.eq(200);
+          expect(response.body).to.have.property('id', taskId);
+          expect(response.body).to.have.property('title', 'New Task');
+      });
+  });
+
+  // Update a task by ID
+  it('should update a task by ID', () => {
+      cy.request({
+          method: 'PUT',
+          url: `${apiUrl}/${taskId}`,
+          body: {
+              title: 'Updated Task',
+              description: 'Updated description',
+              completed: true
+          }
+      }).then(response => {
+          expect(response.status).to.eq(200);
+          expect(response.body).to.have.property('title', 'Updated Task');
+          expect(response.body).to.have.property('completed', true);
+      });
+  });
+
+  // Delete a task by ID
+  it('should delete a task by ID', () => {
+      cy.request({
+          method: 'DELETE',
+          url: `${apiUrl}/${taskId}`
+      }).then(response => {
+          expect(response.status).to.eq(204);
+      });
+  });
+
+  // Ensure the deleted task does not exist
+  it('should return 404 for deleted task', () => {
+      cy.request({
+          method: 'GET',
+          url: `${apiUrl}/${taskId}`,
+          failOnStatusCode: false
+      }).then(response => {
+          expect(response.status).to.eq(404);
+      });
+    });
+  });
+  ```
+
+  **REST-assured - Java**
+
+  Using **Maven** or **Gradle**, ensure that the dependencies are added correctly.
+  ```
+  <dependencies>
+    <dependency>
+        <groupId>io.rest-assured</groupId>
+        <artifactId>rest-assured</artifactId>
+        <version>5.4.0</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
+        <version>5.9.2</version>
+        <scope>test</scope>
+    </dependency>
+    <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>5.9.2</version>
+        <scope>test</scope>
+    </dependency>
+  </dependencies>
+  ```
+  
+  **Java sample code for API testing**
+
+  ```
+  import io.restassured.RestAssured;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
+import org.junit.jupiter.api.*;
+
+import static io.restassured.RestAssured.*;
+import static org.hamcrest.Matchers.*;
+
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class TaskApiTest {
+
+    private static String BASE_URL = "https://api.random.exmaple.com/tasks";
+    private static int taskId;  // Store task ID
+
+    @BeforeAll
+    public static void setup() {
+        RestAssured.baseURI = BASE_URL;
+    }
+
+    @Test
+    @Order(1)
+    public void testCreateTask() {
+        Response response = given()
+                .contentType(ContentType.JSON)
+                .body("{ \"title\": \"New Task\", \"description\": \"Task description\", \"completed\": false }")
+                .when()
+                .post()
+                .then()
+                .statusCode(201)
+                .body("title", equalTo("New Task"))
+                .body("completed", equalTo(false))
+                .extract()
+                .response();
+
+        taskId = response.jsonPath().getInt("id"); // Store task ID for later use
+        Assertions.assertNotEquals(0, taskId);
+    }
+
+    @Test
+    @Order(2)
+    public void testGetTaskById() {
+        given()
+                .pathParam("id", taskId)
+                .when()
+                .get("/{id}")
+                .then()
+                .statusCode(200)
+                .body("id", equalTo(taskId))
+                .body("title", equalTo("New Task"))
+                .body("completed", equalTo(false));
+    }
+
+    @Test
+    @Order(3)
+    public void testUpdateTask() {
+        given()
+                .contentType(ContentType.JSON)
+                .pathParam("id", taskId)
+                .body("{ \"title\": \"Updated Task\", \"description\": \"Updated description\", \"completed\": true }")
+                .when()
+                .put("/{id}")
+                .then()
+                .statusCode(200)
+                .body("title", equalTo("Updated Task"))
+                .body("completed", equalTo(true));
+    }
+
+    @Test
+    @Order(4)
+    public void testDeleteTask() {
+        given()
+                .pathParam("id", taskId)
+                .when()
+                .delete("/{id}")
+                .then()
+                .statusCode(204);
+    }
+
+    @Test
+    @Order(5)
+    public void testGetDeletedTask() {
+        given()
+                .pathParam("id", taskId)
+                .when()
+                .get("/{id}")
+                .then()
+                .statusCode(404);
+    }
+}
+  ```
+
+## Bonus Questions
+
+**Docker**
+I haven’t used Docker for test automation yet, but I do have some knowledge of it and understand its benefits since I run Portainer on my home server. I’m really eager to apply it in a testing environment!
+
+**JUnit + Selenium**
+  There are multiple solutions for this example task:
+- Adding **implicit timeout** after "Delete Task"
+```
+// Wait for the task to disappear
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(taskLocator));
+```
+- Adding **implicit timeout with retries** after "Delete Task"
+```
+// Retry logic: MAX_RETRIES
+boolean isTaskDeleted = false;
+  for (int attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+      try {
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(taskLocator));
+            isTaskDeleted = true;
+            break; // Exit loop if task is successfully deleted
+          } catch (TimeoutException e) {
+            System.out.println("Attempt " + attempt + ": Task still visible, retrying...");
+          }
+   }
+
+  // Final check - Fail the test if the task was not deleted after retries
+  assertTrue(isTaskDeleted, "Task should be removed after deletion attempts");
+```
+- If none of above works consistently, adding an **explicit timeout** after "Delete Task" being called, for e.g 2000ms
+```
+ // Wait for deletion to complete
+        try { Thread.sleep(2000); } catch (InterruptedException e) { e.printStackTrace(); }
+  // Verify the task is no longer in the list
+  boolean isTaskPresent = driver.findElements(By.cssSelector(".sample-task"));
+  assertFalse(isTaskPresent, "Task should be removed after deletion");
+```
+
+**CI Integration**
+I’d set up a Jenkins job to trigger automated tests nightly at a specific time when no one is actively working on the project. Besides, running tests on each code commit or pull request depends on the project’s needs...both approaches can work.
+
+How would I set it up?
+- Connect Jenkins to the repo (GitHub, GitLab, Bitbucket, etc.).
+- Set up build triggers and define the execution stage.
+- Store and analyze test results using JUnit, Allure, or TestNG.
+- Notify the team of test results via Slack or email.
